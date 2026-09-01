@@ -109,7 +109,7 @@ export default function LiveMap({ devices }) {
         </MapContainer>
         
         {/* Legend */}
-        <div className="absolute bottom-4 left-4 bg-slate-800/90 backdrop-blur p-3 rounded-lg border border-slate-700 text-xs space-y-2 shadow-lg">
+        <div className="absolute bottom-4 left-4 bg-slate-800/90 backdrop-blur p-3 rounded-lg border border-slate-700 text-xs space-y-2 shadow-lg z-[1000]">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-emerald-500 border-2 border-white shadow"></div>
             <span className="text-slate-200">Normal (Active)</span>
