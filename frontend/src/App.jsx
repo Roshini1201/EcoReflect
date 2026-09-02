@@ -15,15 +15,23 @@ function App() {
   const [devices, setDevices] = useState([]);
   const [alerts, setAlerts] = useState([]);
   const [carbonLoop, setCarbonLoop] = useState([]);
+  const [vehicleEvents, setVehicleEvents] = useState([]);
 
   useEffect(() => {
     socket.on('devicesUpdate', setDevices);
     socket.on('alertsUpdate', setAlerts);
     socket.on('carbonLoopUpdate', setCarbonLoop);
+
+    // NEW: Listen for vehicle events (keep the last 20)
+    socket.on('vehicleEvent', (event) => {
+      setVehicleEvents(prev => [event, ...prev].slice(0, 20));
+    });
+
     return () => {
       socket.off('devicesUpdate');
-      socket.on('alertsUpdate');
+      socket.off('alertsUpdate');
       socket.off('carbonLoopUpdate');
+      socket.off('vehicleEvent'); // NEW
     };
   }, []);
 
@@ -33,8 +41,7 @@ function App() {
         <Sidebar />
         <main className="flex-1 overflow-y-auto p-6">
           <Routes>
-            <Route path="/" element={<Dashboard devices={devices} alerts={alerts} carbonLoop={carbonLoop} />} />
-            <Route path="/map" element={<LiveMap devices={devices} />} />
+            <Route path="/" element={<Dashboard devices={devices} alerts={alerts} carbonLoop={carbonLoop} vehicleEvents={vehicleEvents} />} />            <Route path="/map" element={<LiveMap devices={devices} carbonLoop={carbonLoop} />} />
             <Route path="/device/:id" element={<DeviceDetails devices={devices} />} />
             <Route path="/analytics" element={<Analytics devices={devices} />} />
             <Route path="/alerts" element={<Alerts alerts={alerts} />} />
@@ -60,7 +67,7 @@ function Sidebar() {
     <aside className="w-64 bg-dark-800 border-r border-dark-700 flex flex-col">
       <div className="p-6 border-b border-dark-700">
         <h1 className="text-2xl font-bold text-eco-400 flex items-center gap-2">
-          <Recycle className="w-8 h-8" /> EcoReflect
+          <Recycle className="w-8 h-8" /> EcoCarbon
         </h1>
         <p className="text-xs text-slate-400 mt-1">Smart Environmental Monitoring</p>
       </div>
@@ -75,7 +82,8 @@ function Sidebar() {
       <div className="p-4 border-t border-dark-700">
         <div className="flex items-center gap-3 text-slate-400">
           <div className="w-2 h-2 rounded-full bg-eco-500 animate-pulse"></div>
-          <span className="text-sm">LoRaWAN Gateway: Connected</span>
+          <span className="text-slate-200 font-medium block">Data Source: Virtual ESP32</span>
+          <span className="text-sm">LoRaWAN Architecture: Ready</span>
         </div>
       </div>
     </aside>
