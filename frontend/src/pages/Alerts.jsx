@@ -8,16 +8,18 @@ export default function Alerts({ alerts }) {
     return <Info className="w-5 h-5 text-blue-400" />;
   };
 
+  const safeAlerts = alerts || [];
+
   return (
     <div className="space-y-6">
       <h2 className="text-2xl font-bold">System Alerts</h2>
-      <div className="bg-dark-800 border border-dark-700 rounded-xl overflow-hidden">
-        {alerts.length === 0 ? (
+      <div className="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden">
+        {safeAlerts.length === 0 ? (
           <div className="p-8 text-center text-slate-500">No active alerts. All systems nominal.</div>
         ) : (
-          <div className="divide-y divide-dark-700">
-            {alerts.slice().reverse().map(alert => (
-              <div key={alert.id} className="p-4 flex items-start gap-4 hover:bg-dark-700/50 transition-colors">
+          <div className="divide-y divide-slate-700">
+            {safeAlerts.slice().reverse().map(alert => (
+              <div key={alert.id} className="p-4 flex items-start gap-4 hover:bg-slate-700/50 transition-colors">
                 {getIcon(alert.severity)}
                 <div className="flex-1">
                   <div className="flex justify-between items-start">
